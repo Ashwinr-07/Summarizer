@@ -1,0 +1,130 @@
+Let's talk storage.
+No, no, not that kind of storage.
+Let's talk about this simple storage service or S3 in AWS.
+From this page in the AWS console, we can go and create what's called a bucket.
+But before we run off and do that, let's back up just a minute and talk about what this is and why you'd want to use it.
+Let's say that you and a couple of your friends are working on a side project together.
+It's called Piny Flicks.
+This will be a platform where users can upload their short films, only films that are five minutes or less.
+So they'll be uploading video files and they're also going to have basic profile functionality that lets them upload their profile pictures.
+You and your friends are already sold on using AWS and you set up an EC2 instance.
+If you want to learn more about EC2, check out this other video of mine linked above.
+At the moment, you only have a few users on your system, specifically your mother and a few friends who are trying to be supportive of this new venture of yours.
+When they go to upload a video or photos, you're currently just stored on an EBS volume, elastic block store, that's attached to your instance.
+In layman's terms, think of those as your computer's hard drive, except it's in the cloud.
+But you have grand plans for this project and you think it's eventually going to blow up into a global platform with hundreds of thousands or maybe even millions of users.
+But of course, being the long-range thinker that you are, you know that you're going to need something that's easy to scale, so you can meet the demand of your growing user base.
+It needs to be accessible from anywhere, meaning it can't be tied just to your EC2 instance, like it currently is with EBS.
+You might eventually want to use a content delivery network or CDN to serve up the videos, and you know that you're going to need to access files from an internet API for that.
+And most importantly, you need a storage solution that's inexpensive, since this is just a side project where you at the moment, you really can't be throwing tons of money at it.
+So enter the simple storage service or S3, the three Ss, if that's not clear, this is inexpensive object storage in AWS.
+Now, if object storage doesn't really mean anything to you, for this exercise, you can think of it kind of as a file, a photo, a video, a log file, a PDF, something like that.
+To be clear, Amazon does offer an elastic file system or EFS service, and this is not that.
+This isn't technically a file server, but I personally find it helpful to think about the kinds of things I would store in S3, and generally those are going to be files.
+For all practical purposes, this storage is unlimited.
+In truth, there probably is some limit, but because of the massive size of Amazon's infrastructure and the ability to scale onto it, you're never really going to hit any limits here.
+And this three is organized into buckets.
+Think of these as your top level containers, where you can store things, maybe a bucket for videos, a bucket for profile pictures, and so on.
+Okay, let's go see this in action, and I think you'll get a better feel for what it's all about.
+Okay, back in the AWS console, we're here in S3.
+If you need a quick video that shows you how to set up an AWS account and get to the console, check out this video linked above.
+All right, we're going to create a bucket, remember that's the top level container, or bucket literally for storing things.
+For bucket name, we'll call this tiny flicks.
+For region, generally you want to choose whatever's closest to your users or closest to the servers that are going to be accessing this bucket.
+I'll go with US East 2 here.
+If you have another bucket already that has all the settings configured, you can copy those settings over, but we don't deserve first one.
+So I'll scroll down.
+Next we have options about access.
+This is super super important.
+You can create public access to your buckets in a variety of ways.
+You'll see those listed here.
+Access control lists, or ACLs bucket policies, access point policies, or all.
+But granting public access is generally not a great idea, meaning you don't want your files accessible to the whole world.
+You generally just want to limit it to some internal services that are needed to run your application.
+There've actually been some pretty high profile hacking incidents that have occurred because the S3 bucket was left open.
+So AWS now makes this the default.
+They're going to block all public access.
+In fact, if you deselect this option, you're going to have to acknowledge that you really know what you're doing and that you've been warned.
+So we'll select this again to block all public access and scroll down.
+With bucket versioning, you can keep multiple versions of objects or files in the bucket.
+This makes it possible to recover old versions.
+Maybe your users need to revert to an old version of a video or a photo or the accidentally delete something and they need to get it back.
+But it also comes in handy if there's some kind of application failure and you need to restore previous versions.
+This option will obviously increase the amount of files that you're storing and your normal S3 rates are going to apply.
+So by default, this is turned off, but if you have a good reason to enable it, you just toggle it on here.
+Scrolling down to tags, these help you manage and organize things and it's also an easy way to track your costs.
+Let's say that this bucket is going to be used for development purposes only.
+So we'll say, Environment equals dev.
+For other buckets, maybe you have environment equals prod for production or testing and so on.
+And then when you're looking at your billing, it'll be easy to separate out what's what.
+Okay, let's remove that.
+You can automatically encrypt new objects stored in the bucket.
+We're going to leave that though as the default of disabled.
+There's some advanced settings here as well for object lock.
+This will prevent objects from being deleted or overwritten.
+This is a handy feature to have if you have some kind of regulatory requirement to store things.
+But we're going to leave it disabled for what we're doing and then create bucket.
+Okay, success.
+Let's click into tiny flicks.
+Obviously we haven't uploaded anything here.
+First though, I want to create some folders.
+So create a folder.
+We'll do one folder for videos.
+Keep everything else the same.
+And then we'll do another one for photos.
+Create folder.
+Now as an aside, folders are actually a bit of a mirage here, meaning behind the scenes they aren't actually folders like you would think of them in Windows Explorer or a structure like that.
+S3 is a flat file structure.
+What really happens is your folder name gets prefixed in front of the file name.
+But for the purposes of interacting with things here in the UI, they behave very much like folders and it's just easy to see and cute things organize this way.
+So just decide note there.
+All right, let's go upload something to the videos folder.
+I'll click on that and then click upload.
+I have a short video here on my hard drive, the introduction for my channel actually.
+I'll just drag that over to right over here and drop it.
+You'll see that gets picked up right down there.
+There's other things you can configure here around permissions and other properties.
+We're just going to leave everything that default though and say upload.
+This will take a minute or two depending on the size of your file.
+You can also upload using the AWS command line interface or programmatically using the software developer kit.
+While we're waiting for this, if you're enjoying the content, consider hitting that like button as well as subscribing to be notified of other AWS content when I upload it.
+Down here on the bottom, you'll see the video file name, tiny technical tutorials, it's an MP4.
+If you click into this, you'll get all the different details about it.
+There's additional tabs here as well for permissions and version if you were using versioning.
+That would have some good information in there for you.
+The object URL is how you would actually access this through browser.
+So I'll just click on this here.
+And denied.
+Remember that's because we blocked all public access.
+So if you actually need to view this video, you have a couple options.
+You can open right up here.
+I'll click on that.
+There's the video.
+I'll pause that.
+This is working because it generates a temporary signed URL.
+That's good for five minutes and it's granting you access to this video.
+You can also coming back here, choose to download it locally and you could view it there.
+All right, so those are the basics of creating a bucket, a folder and then uploading objects to it.
+Before we wrap up though, I want to show you how to delete the S3 bucket.
+So backing up here to S3, you'll see I just have the one bucket.
+So select that and then come up here to delete.
+Now in our case, the bucket is not empty.
+So you have to go empty the bucket first by clicking on this link.
+Use the empty bucket configuration.
+And because this can't be undone, it's kind of forcing you to say yes.
+I really do want to do this.
+So you need to type in permanently delete.
+Empty.
+So that just got rid of everything in the bucket.
+But there's a helpful message up here to actually go delete the bucket itself.
+You can click on that.
+And yes, we do want to delete the bucket here.
+We need to type in the name of the bucket.
+Tiny Flicks.
+Delete.
+And now everything's gone.
+So that's it.
+The basics of S3 on AWS.
+You and your friends are well on your way with the Tiny Flicks side project.
+Thanks so much for watching.
+I hope to see you in the next video.
