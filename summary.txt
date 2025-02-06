@@ -1,0 +1,5 @@
+S3 is inexpensive object storage in Amazon's cloud storage service.
+It can't be tied just to your EC2 instance, like it currently is with EBS.
+S3 can store photos, videos, log files and log files, but it can be accessed from anywhere.
+For more information, visit EC2.com/EC2 and Amazon's EC2 console on how to use S3 in the AWS console.
+The price of S3 starts at $99.99 for most of the storage services in the U.S.
